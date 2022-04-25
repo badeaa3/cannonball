@@ -126,7 +126,7 @@ def announce(model):
     print("------")
     print("Training Settings"                        )
     print("Number of threads: %i"                    % torch.get_num_threads())
-    print("Device: %s"                               % (ops.d if ops.d else getdevice()))
+    print("Device: %s"                               % (ops.d if ops.d else torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
     print("Number of epochs: %i"                     % ops.e)
     print("------")
     print("Early Stop Settings"                      )
