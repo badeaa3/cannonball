@@ -158,9 +158,9 @@ def trainmodel(model, dset, loader, optimizer, lr_scheduler, logger, device, nsi
         lr_scheduler.step() #logger.get_avg_stat("val","loss_total"))
     
     # print the model parameters
-    for name, param in model.named_parameters():
-        if param.requires_grad:
-            print(name, param.data)
+    # for name, param in model.named_parameters():
+    #     if param.requires_grad:
+    #         print(name, param.data)
 
 def train(data, model, optimizer, logger, device, nsig):
     ''' training step given a data (X,Y), model, and optimizer return the loss value and prediction accuracy '''
