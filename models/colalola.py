@@ -1,5 +1,5 @@
 import torch
-__all__ = ['CoLa', 'LoLa', 'Head', 'CoLaLoLa']
+__all__ = ['CoLa', 'LoLa', 'Head', 'Cannonball']
 
 # Combinational Layer
 class CoLa(torch.nn.Module):
@@ -66,7 +66,7 @@ class Head(torch.nn.Module):
         return x
 
 # Stiches the previous classes together to form CoLa + LoLa + Head 
-class CoLaLoLa(torch.nn.Module):            
+class Cannonball(torch.nn.Module):            
 
     def __init__(self, 
                  inDim       = 10,
@@ -75,7 +75,7 @@ class CoLaLoLa(torch.nn.Module):
                  finalLayers = [200],  
                  device      = "cpu",
                  weights     = None):
-        super(CoLaLoLa, self).__init__()
+        super(Cannonball, self).__init__()
 
         # Setup network layers
         self.cola        = CoLa(inDim,ncombos,device)

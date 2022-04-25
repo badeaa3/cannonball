@@ -9,9 +9,6 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator)
 import ROOT 
 
-# for custom functions
-import hnet.plotting.style_combinatoric_solution as scs
-
 # set style based on https://stackoverflow.com/questions/43741928/matplotlib-raw-latex-epsilon-only-yields-varepsilon
 plt.rcParams["mathtext.fontset"] = "cm"
 plt.rcParams["text.usetex"] = True
@@ -181,7 +178,7 @@ def main():
     ax.tick_params(**tick_params_major)
     ax.tick_params(**tick_params_minor)
     # save
-    scs.figsave(os.path.join(ops.o, "perfPlot.pdf"))
+    plt.savefig(os.path.join(ops.o, "perfPlot.pdf"), bbox_inches="tight")
 
 if __name__ == "__main__":
     main()

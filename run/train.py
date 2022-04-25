@@ -20,17 +20,19 @@ from datetime import datetime
 import argparse
 
 # custom code
-from hnet.common.utils.pytorch  import getdevice, tonumpy
-from hnet.common.utils.general  import fatal
-from hnet.common.logger         import Logger
-from hnet.data.batcher          import MyDataset
+sys.path.insert(0,"utils")
+sys.path.insert(0,"../utils")
+from logger   import Logger
+from batcher  import MyDataset
+sys.path.insert(0,"models")
+sys.path.insert(0,"../models")
 
 # useful global variables
 stime = datetime.now().strftime("%Y_%m_%d_%Hh%Mm%Ss")
 
 def main():
     ops       = options() 
-    device    = ops.d if ops.d else getdevice()
+    device    = ops.d if ops.d else torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     save_path = output()
     dset      = MyDataset(ops.i,ops.b)
     loader    = DataLoader(dset, num_workers=ops.j)
@@ -71,7 +73,7 @@ def main():
 def options():
     ''' argument parser to handle inputs from the user '''
     parser = argparse.ArgumentParser(usage=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-a", help="Architecture you wish to use (colalola)", default="colalola")
+    parser.add_argument("-a", help="Architecture you wish to use (cannonball)", default="cannonball")
     parser.add_argument("-d", help="Device to use. If none given then the script will use gpu if it is available, without taking into consideration the gpu's current usage, and cpu if not. ", default=None)
     parser.add_argument("-i", help="Data file to train on.", default=None, required=True)
     parser.add_argument("-o", help="File name of the output", default=None)
@@ -101,19 +103,19 @@ def output():
 def getmodel(device):
     ops = options()
     if ops.a == "colalola":
-        from hnet.architecture.colalola import CoLaLoLa
-        return CoLaLoLa(**{"inDim"      : sum(ops.nsig)  + ops.nisr, 
+        from cannonball import Cannonball
+        return Cannonball(**{"inDim"      : sum(ops.nsig)  + ops.nisr, 
                            "ncombos"    : ops.ncombos,
                            "noutputs"   : (sum(ops.nsig) + ops.nisr) + (sum(ops.nsig) -1), # isr + decay
                            "finalLayers": ops.head,
                            "device"     : device,
                            "weights"    : ops.w})
     else:
-        fatal("No valid model specified!")
+        sys.exit("Fatal error: %s" % ("No valid model specified!"))
 
 def announce(model):
     ops = options()
-    print("Harvard Stop Event Reconstructor :)")                               
+    print("Cannonball Stop Event Reconstructor :)")                               
     print("-------------------------------------------")
     print("Network Settings")
     print("Number of signal jets in final state: %s" % str(ops.nsig))
@@ -188,12 +190,12 @@ def acc(y, yhat, nsig, thrs=0.1):
     ''' various accuracy measures for a sigmoid output'''
     
     # convert to numpy for easy calculation
-    y_np        = tonumpy(y)
-    y_isr       = tonumpy(y[:,:-nsig])
-    y_decay     = tonumpy(y[:,-nsig:])
-    yhat_np     = tonumpy(yhat)
-    yhat_isr    = tonumpy(yhat[:,:-nsig])
-    yhat_decay  = tonumpy(yhat[:,-nsig:])
+    y_np        = y.cpu().detach().numpy()
+    y_isr       = y[:,:-nsig].cpu().detach().numpy()
+    y_decay     = y[:,-nsig:].cpu().detach().numpy()
+    yhat_np     = yhat.cpu().detach().numpy()
+    yhat_isr    = yhat[:,:-nsig].cpu().detach().numpy()
+    yhat_decay  = yhat[:,-nsig:].cpu().detach().numpy()
     
     # prepare accuracy dictionary
     acc = {}

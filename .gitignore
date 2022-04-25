@@ -1,0 +1,8 @@
+# folders
+*__pycache__/
+
+# extensions
+*.npz
+*.h5
+*.txt
+*~

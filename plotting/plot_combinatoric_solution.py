@@ -14,8 +14,9 @@ import multiprocessing as mp
 import time
 
 # user made
-import hnet.plotting.rootformatting as rf 
-import hnet.common.utils.physics as phys
+sys.path.insert(0,"utils")
+sys.path.insert(0,"../utils")
+import physics as phys
 
 # useful parameters
 stime = time.strftime("%Y_%m_%d_%Hh%Mm%Ss")

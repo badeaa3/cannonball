@@ -26,12 +26,14 @@ except RuntimeError:
 
 
 # custom code
-from hnet.common.utils.pytorch  import getdevice, tonumpy
-from hnet.common.utils.data     import dictToRoot
-from hnet.common.utils.physics  import invm
-from hnet.common.utils.general  import fatal
-from hnet.common.logger         import Logger
-from hnet.data.batcher          import MyDataset
+sys.path.insert(0,"utils")
+sys.path.insert(0,"../utils")
+from physics  import invm
+from logger   import Logger
+from batcher  import MyDataset
+sys.path.insert(0,"models")
+sys.path.insert(0,"../models")
+
 
 # useful global variables
 stime = datetime.now().strftime("%Y_%m_%d_%Hh%Mm%Ss")
@@ -103,7 +105,7 @@ def output():
 
 def announce(model):
     ops = options()
-    print("Harvard Stop Event Reconstructor :)")                               
+    print("Cannonball Stop Event Reconstructor :)")                               
     print("-------------------------------------------")
     print("Network Settings")
     print("Number of signal jets in final state: %s" % str(ops.nsig))
@@ -122,17 +124,17 @@ def announce(model):
 
 def getmodel():
     ops    = options()
-    device = ops.d if ops.d else getdevice()
+    device = ops.d if ops.d else torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     if ops.a == "colalola":
-        from hnet.architecture.colalola import CoLaLoLa
-        return CoLaLoLa(**{"inDim"      : sum(ops.nsig)  + ops.nisr,  
+        from cannonball import Cannonball
+        return Cannonball(**{"inDim"      : sum(ops.nsig)  + ops.nisr,  
                            "ncombos"    : ops.ncombos,
                            "noutputs"   : (sum(ops.nsig) + ops.nisr) + (sum(ops.nsig) -1), # isr + decay
                            "finalLayers": ops.head,
                            "device"     : device,
                            "weights"    : ops.w})
     else:
-        fatal("No valid model specified!")
+        sys.exit("Fatal error: %s" % ("No valid model specified!"))
 
 def datastruct(noutputs,newtree=False):
     ''' data structure of output file '''
@@ -181,7 +183,7 @@ def evaluate(config):
     # data, logging, and output name 
     ops       = options()
     wname     = os.path.basename(ops.w).strip(".npz")
-    device    = ops.d if ops.d else getdevice()
+    device    = ops.d if ops.d else torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     dset      = MyDataset(data,ops.b,ops.background)
     loader    = DataLoader(dset, num_workers=ops.j)
     logger    = Logger(**{"nepoch"    : 1,
@@ -206,7 +208,6 @@ def evaluate(config):
             oname = "_".join([fname,"eval",ops.a])
             oname = os.path.join(save_path, oname)
             np.savez(oname + ".npz", **outdata)
-            dictToRoot(oname + ".root", outdata)
 
             # update progress bar
             logger.progress(1, file+1)

@@ -7,9 +7,6 @@ import numpy as np
 import scipy.stats
 import scipy.special
 
-# for custom functions
-import hnet.plotting.style_combinatoric_solution as scs
-
 # set style based on https://stackoverflow.com/questions/43741928/matplotlib-raw-latex-epsilon-only-yields-varepsilon
 plt.rcParams["mathtext.fontset"] = "cm"
 plt.rcParams["text.usetex"] = True
@@ -259,7 +256,7 @@ def main():
      #      ax3d.append(a)
 
      # save
-     scs.figsave(os.path.join(ops.o, "kld_pt_etaphim.pdf"))
+     plt.savefig(os.path.join(ops.o, "kld_pt_etaphim.pdf"), bbox_inches="tight")
 
      # plot eta 
      fig, ax = plt.subplots(1,1,constrained_layout=True,sharey=False,figsize=(6, 5))
@@ -311,7 +308,7 @@ def main():
      ax.tick_params(**tick_params_major)
      ax.tick_params(**tick_params_minor)
      # save
-     scs.figsave(os.path.join(ops.o, "kld_eta2.pdf"))
+     plt.savefig(os.path.join(ops.o, "kld_eta2.pdf"), bbox_inches="tight")
 
      # plot phi 
      fig, ax = plt.subplots(1,1,constrained_layout=True,sharey=False,figsize=(6, 5))
@@ -363,8 +360,7 @@ def main():
      ax.tick_params(**tick_params_major)
      ax.tick_params(**tick_params_minor)
      # save
-     scs.figsave(os.path.join(ops.o, "kld_phi2.pdf"))
-                      
+     plt.savefig(os.path.join(ops.o, "kld_phi2.pdf"), bbox_inches="tight") 
 
 def PtEtaPhiE(x):
     ''' x is batched [[[e,px,py,pz],[e,px,py,pz],...],...] '''   

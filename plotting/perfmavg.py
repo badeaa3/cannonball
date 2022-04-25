@@ -8,10 +8,7 @@ import argparse
 import os
 import matplotlib.pyplot as plt 
 from matplotlib.ticker import (MultipleLocator, AutoMinorLocator, FuncFormatter)
-import ROOT 
-
-# for custom functions
-import hnet.plotting.style_combinatoric_solution as scs
+import ROOT
 
 # set style based on https://stackoverflow.com/questions/43741928/matplotlib-raw-latex-epsilon-only-yields-varepsilon
 plt.rcParams["mathtext.fontset"] = "cm"
@@ -228,7 +225,7 @@ def main():
     ax.xaxis.set_major_formatter(FuncFormatter(tickFormatter))
     # plt.yticks(rotation=45, ha='right')
     # save
-    scs.figsave(os.path.join(ops.o, "perfmavg.pdf"))
+    plt.savefig(os.path.join(ops.o, "perfmavg.pdf"), bbox_inches="tight")
 
 if __name__ == "__main__":
     main()
