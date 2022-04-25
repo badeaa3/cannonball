@@ -76,12 +76,6 @@ class MassAsymmetry(torch.nn.Module):
     def forward(self, x):
         self.goodinput(x)
         fwd = torch.stack([self.asym(x[:,i]) for i in self.combos],dim=1)
-        # check if there is an increasing number of nan's or infinities at larger values of epsilon
-        print(fwd[:,0].shape)
-        print(fwd[:,1:].shape)
-        print("Fraction of (correct,incorrect,full rows) combinations that are nan: (%1.3f,%1.3f,%1.3f)" % (torch.sum(torch.isnan(fwd[:,0]))/fwd[:,0].numel(),
-                                                                                                            torch.sum(torch.isnan(fwd[:,1:]))/fwd[:,1:].numel(),
-                                                                                                            torch.sum(torch.sum(~torch.isnan(fwd),dim=1) == 0)/fwd.shape[0])) 
         # the below method of setting nan to inf can be problematic if an entire row is infinite then simple the first element is picked
         # in this case a random guess should be taken since there is no candidate
         j = torch.where(torch.sum(~torch.isnan(fwd),dim=1) == 0)[0] # figure out which rows are all nan
@@ -122,10 +116,8 @@ class MassAsymmetryHead(torch.nn.Module):
         
         # layers
         self.cola = CoLa(inDim,nchildren)
-        print(self.cola.combos)
         self.lola = LoLa(self.cola.ncombos,device)
         self.masym = MassAsymmetry(self.cola.ncombos,self.cola.combos)
-        print(self.masym.combos)
         self.slay = SelectionLayer(self.masym.ncombos)
 
     def forward(self, x):

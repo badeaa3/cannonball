@@ -109,12 +109,12 @@ def getmodel():
     ops    = options()
     device = ops.d if ops.d else torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     if ops.m == "masym":
-        from hnet.benchmark.masym import MassAsymmetryHead
+        from masym import MassAsymmetryHead
         return MassAsymmetryHead(**{"inDim"     : ops.ninp,
                                     "nchildren" : ops.nchildren,
                                     "device"    : device})
     elif ops.m == "drsum":
-        from hnet.benchmark.drsum import MinDeltaRSumHead
+        from drsum import MinDeltaRSumHead
         return MinDeltaRSumHead(**{"inDim"     : ops.ninp,
                                    "nchildren" : ops.nchildren,
                                    "const"     : ops.constant,
