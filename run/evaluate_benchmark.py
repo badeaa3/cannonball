@@ -16,8 +16,7 @@ import numpy as np
 import sys
 import os
 from datetime import datetime
-from progressbar import progressbar
-import uproot3
+import uproot
 from glob import glob
 import torch.multiprocessing as mp
 try:
@@ -238,7 +237,7 @@ def evaluate(config):
 def eval(data, model, device, outdata, tree, train):
     ''' evaluate model on provided data (X,Y) and populate output data '''
     ops = options()
-    for dat in progressbar(data):
+    for dat in data:
         x   = dat[0].to(device)
         p   = model(x)
        

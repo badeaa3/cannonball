@@ -1,9 +1,12 @@
 import torch
 import math
 import itertools
+import sys
 
-# user made tools
-import hnet.common.utils.physics as phys
+# custom code
+sys.path.insert(0,"utils")
+sys.path.insert(0,"../utils")
+import physics as phys
 
 class DeltaR(torch.nn.Module):
 

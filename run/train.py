@@ -12,7 +12,6 @@ import torch
 from torch.nn.functional import binary_cross_entropy
 from torch.utils.data import DataLoader
 import numpy as np
-from progressbar import progressbar
 import os
 import sys
 from time import time
