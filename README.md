@@ -10,5 +10,3 @@ To do:
 - [x] update readme with simple how to run
 
 See `tester.sh` for examples of how to launch the training and evaluation scripts.
-
-[![DOI](https://zenodo.org/badge/484538647.svg)](https://zenodo.org/badge/latestdoi/484538647)
